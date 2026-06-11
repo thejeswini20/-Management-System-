@@ -1,5 +1,5 @@
 // API Configuration
-export const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://dance-management-system-fri7.onrender.com';
+export const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://management-system-9w3n.onrender.com';
 
 // API Endpoints
 export const API_ENDPOINTS = {

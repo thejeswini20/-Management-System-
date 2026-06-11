@@ -2,5 +2,8 @@
   "dependencies": {
     "dotenv": "^17.4.2",
     "mongoose": "^9.6.3"
+  },
+  "devDependencies": {
+    "eslint-plugin-react-hooks": "^7.1.1"
   }
 }

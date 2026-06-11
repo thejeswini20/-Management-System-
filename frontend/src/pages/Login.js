@@ -39,7 +39,7 @@ export default function Login({ setIsLoggedIn }) {
   const location = useLocation();
   const navigate = useNavigate();
   const [isRegister, setIsRegister] = useState(location.pathname === '/register');
-  const [form, setForm] = useState({ name: '', email: '', phone: '', password: '', confirmPassword: '', role: 'student' });
+  const [form, setForm] = useState({ firstName: '', lastName: '', email: '', phone: '', password: '', confirmPassword: '', role: 'student' });
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -70,8 +70,8 @@ export default function Login({ setIsLoggedIn }) {
       }
 
       if (isRegister) {
-        if (!form.name) {
-          setError('Please enter your full name.');
+        if (!form.firstName || !form.lastName) {
+          setError('Please enter your first and last name.');
           return;
         }
         if (!agreeTerms) {
@@ -86,7 +86,7 @@ export default function Login({ setIsLoggedIn }) {
           setError('Password must be at least 6 characters.');
           return;
         }
-        await register(form.email, form.password, form.name);
+        await register(form.email, form.password, form.firstName, form.lastName);
       } else {
         await login(form.email, form.password);
       }
@@ -138,17 +138,30 @@ export default function Login({ setIsLoggedIn }) {
           <form onSubmit={handleSubmit} className="login-form">
             {isRegister && (
               <>
-                <Field
-                  icon={<FiUser />}
-                  name="name"
-                  label="Full Name"
-                  value={form.name || ''}
-                  onChange={e => {
-                    setError('');
-                    setForm({ ...form, name: e.target.value });
-                  }}
-                  disabled={loading}
-                />
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                  <Field
+                    icon={<FiUser />}
+                    name="firstName"
+                    label="First Name"
+                    value={form.firstName || ''}
+                    onChange={e => {
+                      setError('');
+                      setForm({ ...form, firstName: e.target.value });
+                    }}
+                    disabled={loading}
+                  />
+                  <Field
+                    icon={<FiUser />}
+                    name="lastName"
+                    label="Last Name"
+                    value={form.lastName || ''}
+                    onChange={e => {
+                      setError('');
+                      setForm({ ...form, lastName: e.target.value });
+                    }}
+                    disabled={loading}
+                  />
+                </div>
                 <Field
                   icon={<FiPhone />}
                   name="phone"
@@ -176,6 +189,28 @@ export default function Login({ setIsLoggedIn }) {
               }}
               disabled={loading}
             />
+
+            {!isRegister && (
+              <div style={{ textAlign: 'right', marginBottom: '12px' }}>
+                <button
+                  type="button"
+                  onClick={() => navigate('/forgot-password')}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    color: 'var(--primary)',
+                    textDecoration: 'underline',
+                    fontFamily: 'inherit',
+                    fontSize: '0.85rem',
+                    padding: 0,
+                    cursor: 'pointer',
+                    fontWeight: '500'
+                  }}
+                >
+                  Forgot Password?
+                </button>
+              </div>
+            )}
 
             <div className="form-group">
               <label htmlFor="password">Password</label>
@@ -300,19 +335,19 @@ export default function Login({ setIsLoggedIn }) {
             </div>
             <div className="terms-modal-content">
               <p>Welcome to <strong>Rhythmique Dance Academy</strong>. By registering or using our application, you agree to comply with and be bound by the following terms and conditions:</p>
-              
+
               <h4>1. Enrollment and Membership</h4>
               <p>Enrollment is subject to class availability. Members must provide accurate personal information and notify us of any updates immediately.</p>
-              
+
               <h4>2. Code of Conduct</h4>
               <p>All students, instructors, and visitors are expected to behave respectfully. Disruptive or offensive behavior may result in suspension or termination of membership.</p>
-              
+
               <h4>3. Fee Policy</h4>
               <p>Fees are payable in advance of course start dates. Late payments may incur overdue charges, and unpaid fees can lead to temporary suspension from classes.</p>
-              
+
               <h4>4. Liability Release</h4>
               <p>Participation in dance training carries inherent physical risks. Rhythmique is not responsible for any personal injuries, damage, or loss of personal property during classes or events.</p>
-              
+
               <h4>5. Privacy & Data Protection</h4>
               <p>We respect your privacy. All registration information (name, email, phone) is securely stored in MongoDB and used solely for management and communications.</p>
             </div>

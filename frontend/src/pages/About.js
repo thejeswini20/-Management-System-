@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './PageStyles.css';
 
 const milestones = [
@@ -24,16 +25,17 @@ const stats = [
 ];
 
 export default function About() {
+  const navigate = useNavigate();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <div className="about-page">
-      {/* Hero Section - Improved with better gradients and typography */}
+      {/* Hero Section */}
       <section className="hero-section">
-        <div className="hero-bg-animation">
-          <div className="orb orb-1"></div>
-          <div className="orb orb-2"></div>
-          <div className="orb orb-3"></div>
-          <div className="grid-overlay"></div>
-        </div>
+        <div className="hero-bg-image"></div>
+        <div className="hero-overlay"></div>
         <div className="hero-content">
           <span className="hero-badge">EST. 2016</span>
           <h1 className="hero-title">
@@ -45,8 +47,8 @@ export default function About() {
             breathtaking performances since 2016.
           </p>
           <div className="hero-cta">
-            <button className="btn-primary">Join Our Family</button>
-            <button className="btn-outline">Watch Our Story →</button>
+            <button className="btn-primary" onClick={() => navigate('/enroll')}>Join Our Family</button>
+            <button className="btn-outline" onClick={() => navigate('/trial')}>Book Free Trial →</button>
           </div>
         </div>
         <div className="hero-scroll-indicator">
@@ -174,8 +176,8 @@ export default function About() {
             <h2>Ready to Start Your Dance Journey?</h2>
             <p>Join 500+ dancers who've found their rhythm at Rhythmique. Your first trial class is on us.</p>
             <div className="cta-buttons">
-              <button className="btn-primary-large">Book Free Trial Class →</button>
-              <button className="btn-outline-light">Download Brochure</button>
+              <button className="btn-primary-large" onClick={() => navigate('/trial')}>Book Free Trial Class →</button>
+              <button className="btn-outline-light" onClick={() => navigate('/enroll')}>Enroll Now</button>
             </div>
           </div>
         </div>
@@ -195,67 +197,28 @@ export default function About() {
           align-items: center;
           justify-content: center;
           overflow: hidden;
-          background: linear-gradient(135deg, #0a0a2a 0%, #1a1a3a 100%);
+          background: #1a1520;
         }
 
-        .hero-bg-animation {
+        .hero-bg-image {
           position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          overflow: hidden;
+          inset: 0;
+          background-image: url('https://images.unsplash.com/photo-1508700929628-666bc8bd84ea?w=1600&q=80');
+          background-size: cover;
+          background-position: center 30%;
+          filter: brightness(0.65) saturate(0.9);
         }
 
-        .orb {
+        .hero-overlay {
           position: absolute;
-          border-radius: 50%;
-          filter: blur(80px);
-          opacity: 0.6;
-          animation: float 15s ease-in-out infinite;
-        }
-
-        .orb-1 {
-          width: 500px;
-          height: 500px;
-          background: radial-gradient(circle, #ff6b9d, #c44569);
-          top: -150px;
-          left: -150px;
-          animation-delay: 0s;
-        }
-
-        .orb-2 {
-          width: 600px;
-          height: 600px;
-          background: radial-gradient(circle, #a363d9, #6c5ce7);
-          bottom: -200px;
-          right: -200px;
-          animation-delay: 5s;
-        }
-
-        .orb-3 {
-          width: 400px;
-          height: 400px;
-          background: radial-gradient(circle, #00cec9, #0984e3);
-          top: 40%;
-          left: 40%;
-          animation-delay: 10s;
-        }
-
-        .grid-overlay {
-          position: absolute;
-          width: 100%;
-          height: 100%;
-          background-image:
-            linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-          background-size: 50px 50px;
-        }
-
-        @keyframes float {
-          0%, 100% { transform: translate(0, 0) scale(1); }
-          33% { transform: translate(30px, -30px) scale(1.1); }
-          66% { transform: translate(-20px, 20px) scale(0.95); }
+          inset: 0;
+          background: linear-gradient(
+            135deg,
+            rgba(44, 22, 48, 0.75) 0%,
+            rgba(30, 15, 40, 0.55) 40%,
+            rgba(20, 10, 30, 0.65) 100%
+          );
+          backdrop-filter: blur(2px);
         }
 
         .hero-content {
@@ -269,42 +232,44 @@ export default function About() {
 
         .hero-badge {
           display: inline-block;
-          padding: 8px 20px;
-          background: rgba(255,255,255,0.15);
-          backdrop-filter: blur(10px);
+          padding: 8px 22px;
+          background: rgba(255,255,255,0.12);
+          backdrop-filter: blur(12px);
           border-radius: 100px;
-          font-size: 0.85rem;
-          letter-spacing: 2px;
-          margin-bottom: 24px;
+          font-size: 0.82rem;
+          letter-spacing: 2.5px;
+          margin-bottom: 28px;
           border: 1px solid rgba(255,255,255,0.2);
+          color: #f0dce8;
         }
 
         .hero-title {
-          font-size: 3.5rem;
+          font-size: 3.2rem;
           font-weight: 800;
-          line-height: 1.2;
+          line-height: 1.15;
           margin-bottom: 24px;
+          text-shadow: 0 2px 40px rgba(0,0,0,0.3);
         }
 
         @media (min-width: 768px) {
           .hero-title {
-            font-size: 5rem;
+            font-size: 4.5rem;
           }
         }
 
         .hero-highlight {
-          background: linear-gradient(135deg, #ff6b9d, #a363d9);
+          background: linear-gradient(135deg, #e8b4cb, #d4a0d8, #c2a8e2);
           -webkit-background-clip: text;
           background-clip: text;
           color: transparent;
         }
 
         .hero-subtitle {
-          font-size: 1.125rem;
-          line-height: 1.6;
-          opacity: 0.9;
-          margin-bottom: 32px;
-          max-width: 600px;
+          font-size: 1.1rem;
+          line-height: 1.7;
+          color: rgba(255,255,255,0.85);
+          margin-bottom: 36px;
+          max-width: 580px;
           margin-left: auto;
           margin-right: auto;
         }
@@ -317,34 +282,37 @@ export default function About() {
         }
 
         .btn-primary, .btn-outline {
-          padding: 12px 28px;
+          padding: 14px 32px;
           border-radius: 50px;
           font-weight: 600;
           cursor: pointer;
           transition: all 0.3s ease;
           border: none;
           font-size: 1rem;
+          letter-spacing: 0.3px;
         }
 
         .btn-primary {
-          background: linear-gradient(135deg, #ff6b9d, #c44569);
+          background: linear-gradient(135deg, #c9749a, #a678b8);
           color: white;
-          box-shadow: 0 4px 15px rgba(255,107,157,0.3);
+          box-shadow: 0 4px 20px rgba(169,100,140,0.4);
         }
 
         .btn-primary:hover {
           transform: translateY(-2px);
-          box-shadow: 0 8px 25px rgba(255,107,157,0.4);
+          box-shadow: 0 8px 30px rgba(169,100,140,0.5);
+          filter: brightness(1.08);
         }
 
         .btn-outline {
-          background: transparent;
-          border: 2px solid white;
+          background: rgba(255,255,255,0.1);
+          backdrop-filter: blur(8px);
+          border: 1.5px solid rgba(255,255,255,0.35);
           color: white;
         }
 
         .btn-outline:hover {
-          background: rgba(255,255,255,0.1);
+          background: rgba(255,255,255,0.2);
           transform: translateY(-2px);
         }
 
@@ -354,15 +322,15 @@ export default function About() {
           left: 50%;
           transform: translateX(-50%);
           text-align: center;
-          color: white;
-          font-size: 0.8rem;
-          opacity: 0.7;
+          color: rgba(255,255,255,0.6);
+          font-size: 0.78rem;
+          letter-spacing: 1px;
         }
 
         .scroll-line {
           width: 1px;
           height: 40px;
-          background: linear-gradient(to bottom, white, transparent);
+          background: linear-gradient(to bottom, rgba(255,255,255,0.5), transparent);
           margin: 8px auto 0;
           animation: scrollPulse 2s ease-in-out infinite;
         }
@@ -393,7 +361,7 @@ export default function About() {
         .stat-value {
           font-size: 3rem;
           font-weight: 800;
-          background: linear-gradient(135deg, #ff6b9d, #a363d9);
+          background: linear-gradient(135deg, #c9749a, #a678b8);
           -webkit-background-clip: text;
           background-clip: text;
           color: transparent;
@@ -435,8 +403,8 @@ export default function About() {
         .section-badge {
           display: inline-block;
           padding: 6px 16px;
-          background: linear-gradient(135deg, #ff6b9d20, #a363d920);
-          color: #c44569;
+          background: linear-gradient(135deg, #c9749a20, #a678b820);
+          color: #9a5f7a;
           border-radius: 50px;
           font-size: 0.8rem;
           font-weight: 600;
@@ -549,7 +517,7 @@ export default function About() {
         /* Mission Section */
         .mission-section {
           padding: 80px 0;
-          background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+          background: linear-gradient(135deg, #2c1630 0%, #1e1428 100%);
           color: white;
         }
 
@@ -562,11 +530,11 @@ export default function About() {
         .mission-card {
           text-align: center;
           padding: 32px;
-          background: rgba(255,255,255,0.05);
+          background: rgba(255,255,255,0.06);
           backdrop-filter: blur(10px);
           border-radius: 24px;
           border: 1px solid rgba(255,255,255,0.1);
-          transition: transform 0.3s ease;
+          transition: all 0.3s ease;
         }
 
         .mission-card:hover {
@@ -620,7 +588,7 @@ export default function About() {
           top: 0;
           bottom: 0;
           width: 2px;
-          background: linear-gradient(to bottom, #ff6b9d, #a363d9);
+          background: linear-gradient(to bottom, #c9749a, #a678b8);
         }
 
         .timeline-node {
@@ -638,7 +606,7 @@ export default function About() {
         .timeline-icon {
           width: 60px;
           height: 60px;
-          background: linear-gradient(135deg, #ff6b9d, #a363d9);
+          background: linear-gradient(135deg, #c9749a, #a678b8);
           border-radius: 50%;
           display: flex;
           align-items: center;
@@ -646,7 +614,7 @@ export default function About() {
           font-size: 1.5rem;
           z-index: 2;
           position: relative;
-          box-shadow: 0 4px 15px rgba(163,99,217,0.3);
+          box-shadow: 0 4px 15px rgba(166,120,184,0.3);
         }
 
         .timeline-line {
@@ -655,7 +623,7 @@ export default function About() {
           left: 29px;
           width: 2px;
           height: calc(100% + 48px);
-          background: linear-gradient(to bottom, #a363d9, #ff6b9d);
+          background: linear-gradient(to bottom, #a678b8, #c9749a);
         }
 
         .timeline-node:last-child .timeline-line {
@@ -670,7 +638,7 @@ export default function About() {
         .timeline-year {
           font-size: 1.25rem;
           font-weight: 700;
-          color: #c44569;
+          color: #9a5f7a;
           margin-bottom: 8px;
         }
 
@@ -683,7 +651,7 @@ export default function About() {
         .cta-section {
           position: relative;
           padding: 100px 0;
-          background: linear-gradient(135deg, #0a0a2a 0%, #1a1a3a 100%);
+          background: linear-gradient(135deg, #2c1630 0%, #1e1428 100%);
           overflow: hidden;
         }
 
@@ -729,7 +697,7 @@ export default function About() {
 
         .btn-primary-large {
           padding: 14px 32px;
-          background: linear-gradient(135deg, #ff6b9d, #c44569);
+          background: linear-gradient(135deg, #c9749a, #a678b8);
           border: none;
           border-radius: 50px;
           color: white;
@@ -741,13 +709,13 @@ export default function About() {
 
         .btn-primary-large:hover {
           transform: translateY(-2px);
-          box-shadow: 0 8px 25px rgba(255,107,157,0.4);
+          box-shadow: 0 8px 25px rgba(169,100,140,0.4);
         }
 
         .btn-outline-light {
           padding: 14px 32px;
           background: transparent;
-          border: 2px solid white;
+          border: 1.5px solid rgba(255,255,255,0.35);
           border-radius: 50px;
           color: white;
           font-weight: 600;

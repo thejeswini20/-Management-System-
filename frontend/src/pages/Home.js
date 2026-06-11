@@ -126,6 +126,10 @@ export default function Home() {
   const [slideIndex, setSlideIndex] = useState(0);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
     const timer = setInterval(() => {
       setSlideIndex(prev => (prev + 1) % heroBgSlides.length);
     }, 5000);

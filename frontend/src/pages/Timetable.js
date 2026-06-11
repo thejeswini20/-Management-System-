@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { timetable } from '../data/data';
 import './PageStyles.css';
 
@@ -127,6 +127,10 @@ const TimetableControls = ({ onFilterChange, batches, levels }) => {
 // Main Timetable Component
 export default function Timetable() {
   const [filters, setFilters] = useState({ batch: null, level: null });
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   // Get current day to highlight today's column
   const getCurrentDay = () => {

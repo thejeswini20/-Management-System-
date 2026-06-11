@@ -1,4 +1,4 @@
-const API_URL = process.env.REACT_APP_API_URL || 'https://dance-management-system-fri7.onrender.com';
+const API_URL = process.env.REACT_APP_API_URL || 'https://management-system-9w3n.onrender.com';
 
 export const apiCall = async (endpoint, options = {}) => {
   const url = `${API_URL}${endpoint}`;

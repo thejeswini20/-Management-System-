@@ -1,34 +1,134 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { FiSearch, FiPlus, FiEdit2, FiTrash2, FiUsers, FiGrid, FiList, FiDownload } from 'react-icons/fi';
-import { students as initialStudents } from '../../data/data';
+import { get, post, put, del } from '../../utils/api';
 import './Dashboard.css';
+
 
 const courseColors = { Ballet:'#7c3aed', 'Hip-Hop':'#ec4899', Kathak:'#f59e0b', Contemporary:'#0d9488', Salsa:'#ef4444', Bharatanatyam:'#6366f1' };
 
 export default function Students() {
-  const [students, setStudents] = useState(initialStudents);
+  const [students, setStudents] = useState([]);
   const [search, setSearch] = useState('');
   const [view, setView] = useState('table');
   const [showModal, setShowModal] = useState(false);
-  const [form, setForm] = useState({ name:'', age:'', course:'', batch:'', fee:'', status:'Active' });
+  const [form, setForm] = useState({ name:'', email:'', course:'', age:'', batch:'', fee:'', status:'Active', phone:'' });
   const [editId, setEditId] = useState(null);
   const [filterStatus, setFilterStatus] = useState('All');
 
-  const filtered = students.filter(s => {
-    const q = search.toLowerCase();
-    const matchQ = s.name.toLowerCase().includes(q) || s.course.toLowerCase().includes(q);
-    const matchS = filterStatus === 'All' || s.status === filterStatus;
-    return matchQ && matchS;
-  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleSave = () => {
-    if (!form.name || !form.course) return;
-    if (editId) setStudents(students.map(s => s.id === editId ? { ...s, ...form } : s));
-    else setStudents([...students, { ...form, id: Date.now(), joined: 'Jun 2024', avatar: courseColors[form.course] || '#7c3aed' }]);
-    setShowModal(false); setForm({ name:'', age:'', course:'', batch:'', fee:'', status:'Active' }); setEditId(null);
+  const filtered = useMemo(() => {
+    return students.filter(s => {
+      const q = search.toLowerCase();
+      const matchQ = (s.name || '').toLowerCase().includes(q) || (s.course || '').toLowerCase().includes(q);
+      const matchS = filterStatus === 'All' || s.status === filterStatus;
+      return matchQ && matchS;
+    });
+  }, [students, search, filterStatus]);
+
+
+  const normalizeStudentFromApi = (s) => {
+    // Backend student schema likely uses MongoDB _id; UI expects id.
+    const id = s.id || s._id;
+    return {
+      id,
+      name: s.name ?? '',
+      email: s.email ?? '',
+      course: s.course ?? '',
+      age: s.age ?? '',
+      batch: s.batch ?? '',
+      fee: s.fee ?? s.amount ?? '',
+      status: s.status ?? 'Active',
+      joined: s.joinDate || s.joined || s.joinDate || '',
+      avatar: s.avatar || courseColors[s.course] || '#7c3aed'
+    };
   };
-  const openEdit = (s) => { setForm(s); setEditId(s.id); setShowModal(true); };
-  const handleDelete = (id) => setStudents(students.filter(s => s.id !== id));
+
+  const fetchStudents = async () => {
+    setLoading(true);
+    setError('');
+    try {
+      const res = await get('/api/students');
+      // handlers return { success, data, count }.
+      const list = Array.isArray(res?.data) ? res.data : [];
+      setStudents(list.map(normalizeStudentFromApi));
+    } catch (err) {
+      setError(err?.message || 'Failed to load students');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchStudents();
+  }, []);
+
+  const handleSave = async () => {
+    if (!form.name || !form.course || !form.email) {
+      setError('Name, email, and course are required');
+      return;
+    }
+
+    setLoading(true);
+    setError('');
+    try {
+      const payload = {
+        name: form.name,
+        email: form.email,
+        course: form.course,
+        joinDate: form.joined || undefined,
+        status: form.status
+      };
+
+      if (editId) {
+        await put(`/api/students/${editId}`, payload);
+      } else {
+        await post('/api/students', payload);
+      }
+
+      setShowModal(false);
+      setEditId(null);
+      setForm({ name:'', email:'', course:'', age:'', batch:'', fee:'', status:'Active' });
+      await fetchStudents();
+    } catch (err) {
+      setError(err?.message || 'Save failed');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const openEdit = (s) => {
+    setForm({
+      name: s.name || '',
+      email: s.email || '',
+      course: s.course || '',
+      age: s.age || '',
+      batch: s.batch || '',
+      fee: s.fee || '',
+      status: s.status || 'Active',
+      joined: s.joined || ''
+    });
+    setEditId(s.id);
+    setShowModal(true);
+  };
+
+  const handleDelete = async (id) => {
+    if (!id) return;
+    if (!window.confirm('Delete this student?')) return;
+
+    setLoading(true);
+    setError('');
+    try {
+      await del(`/api/students/${id}`);
+      await fetchStudents();
+    } catch (err) {
+      setError(err?.message || 'Delete failed');
+    } finally {
+      setLoading(false);
+    }
+  };
+
 
   const active = students.filter(s => s.status === 'Active').length;
   const revenue = students.filter(s => s.status === 'Active').reduce((a, s) => a + Number(s.fee), 0);
@@ -54,7 +154,7 @@ export default function Students() {
       <div className="stat-grid">
         {[
           { label:'Total Students', value:students.length, icon:<FiUsers />, cls:'stat-purple', trend:'+3 this month' },
-          { label:'Active Students', value:active, icon:'✅', cls:'stat-green', trend:`${Math.round(active/students.length*100)}% active` },
+          { label:'Active Students', value:active, icon:'✅', cls:'stat-green', trend:`${students.length ? Math.round(active/students.length*100) : 0}% active` },
           { label:'Inactive', value:students.length - active, icon:'⏸', cls:'stat-gold', trend:'Need follow-up' },
           { label:'Monthly Revenue', value:`₹${(revenue/1000).toFixed(1)}k`, icon:'💰', cls:'stat-teal', trend:`₹${revenue.toLocaleString()} total` },
         ].map(s => (

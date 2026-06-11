@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import About from './pages/About';
@@ -8,6 +8,8 @@ import Instructors from './pages/Instructors';
 import Timetable from './pages/Timetable';
 import Fees from './pages/Fees';
 import Login from './pages/Login';
+import Enroll from './pages/Enroll';
+import TrialBooking from './pages/dashboard/trailbooking';
 import DashboardLayout from './pages/dashboard/DashboardLayout';
 import Students from './pages/dashboard/Students';
 import InstructorMgmt from './pages/dashboard/InstructorMgmt';
@@ -18,11 +20,21 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 
 function ProtectedLayout({ children }) {
   const { isAuthenticated } = useAuth();
+  const location = useLocation();
 
   if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/login" state={{ from: location.pathname }} replace />;
   }
 
+  return (
+    <>
+      <Navbar />
+      {children}
+    </>
+  );
+}
+
+function NavbarLayout({ children }) {
   return (
     <>
       <Navbar />
@@ -43,6 +55,8 @@ function AppRoutes({ setIsLoggedIn }) {
       <Route path="/instructors" element={<ProtectedLayout><Instructors /></ProtectedLayout>} />
       <Route path="/timetable" element={<ProtectedLayout><Timetable /></ProtectedLayout>} />
       <Route path="/fees" element={<ProtectedLayout><Fees /></ProtectedLayout>} />
+      <Route path="/enroll" element={<NavbarLayout><Enroll /></NavbarLayout>} />
+      <Route path="/trial" element={<NavbarLayout><TrialBooking /></NavbarLayout>} />
 
       <Route path="/dashboard" element={<ProtectedLayout><DashboardLayout /></ProtectedLayout>}>
         <Route index element={<Students />} />

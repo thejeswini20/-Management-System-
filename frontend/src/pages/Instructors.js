@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FiStar, FiUsers, FiClock, FiAward, FiInstagram, FiTwitter, FiMail, FiChevronLeft, FiChevronRight, FiHeart, FiTrendingUp } from 'react-icons/fi';
 import { instructors } from '../data/data';
@@ -11,6 +11,10 @@ export default function Instructors() {
   const [showBookingToast, setShowBookingToast] = useState(false);
   const [bookingInstructor, setBookingInstructor] = useState(null);
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const specializations = ['all', ...new Set(instructors.map(i => i.specialization?.split(',')[0] || 'Other'))];
 
   const filteredInstructors = filter === 'all'
@@ -18,13 +22,13 @@ export default function Instructors() {
     : instructors.filter(i => i.specialization?.toLowerCase().includes(filter.toLowerCase()));
 
   const handleBookTrial = (instructor, e) => {
-    if (e && e.stopPropagation) e.stopPropagation(); // Prevent opening the modal
-    navigate('/fees', { state: { autoBookTrial: true, instructorName: instructor.name } });
+    if (e && e.stopPropagation) e.stopPropagation();
+    navigate('/trial', { state: { instructorName: instructor.name } });
   };
 
   const handleModalBookTrial = (instructor) => {
-    setSelectedInstructor(null); // Close the modal
-    navigate('/fees', { state: { autoBookTrial: true, instructorName: instructor.name } });
+    setSelectedInstructor(null);
+    navigate('/trial', { state: { instructorName: instructor.name } });
   };
 
   const handleSocialClick = (platform, instructor, e) => {
@@ -38,13 +42,10 @@ export default function Instructors() {
     <div className="instructors-page page-fade-in">
       {/* Toast Notification */}
 
-      {/* Hero Section - Inspiring and dynamic */}
+      {/* Hero Section */}
       <section className="instructors-hero">
-        <div className="hero-bg-shapes">
-          <div className="shape shape-1"></div>
-          <div className="shape shape-2"></div>
-          <div className="shape shape-3"></div>
-        </div>
+        <div className="hero-bg-image"></div>
+        <div className="hero-overlay"></div>
         <div className="hero-content">
           <div className="hero-badge">
             <span>World-Class Faculty</span>
@@ -360,57 +361,32 @@ export default function Instructors() {
         .instructors-hero {
           position: relative;
           min-height: 85vh;
-          background: linear-gradient(135deg, #0f0c29 0%, #1a1a3e 50%, #0d2b3e 100%);
+          background: #1a1520;
           display: flex;
           align-items: center;
           justify-content: center;
           overflow: hidden;
         }
 
-        .hero-bg-shapes {
+        .hero-bg-image {
           position: absolute;
-          width: 100%;
-          height: 100%;
+          inset: 0;
+          background-image: url('https://www.ballet.org.uk/wp-content/uploads/2025/11/Emma-Hawes-as-Aurora-in-Sir-Kenneth-MacMillans-The-Sleeping-Beauty-%C2%A9-Emily-Nuttall.jpg_1mb.jpg');
+          background-size: cover;
+          background-position: center 25%;
+          filter: brightness(0.52) saturate(0.8);
         }
 
-        .shape {
+        .hero-overlay {
           position: absolute;
-          border-radius: 50%;
-          filter: blur(60px);
-          opacity: 0.3;
-          animation: float 20s ease-in-out infinite;
-        }
-
-        .shape-1 {
-          width: 400px;
-          height: 400px;
-          background: radial-gradient(circle, #ff6b9d, #c44569);
-          top: -100px;
-          left: -100px;
-        }
-
-        .shape-2 {
-          width: 500px;
-          height: 500px;
-          background: radial-gradient(circle, #a363d9, #6c5ce7);
-          bottom: -150px;
-          right: -150px;
-          animation-delay: 7s;
-        }
-
-        .shape-3 {
-          width: 300px;
-          height: 300px;
-          background: radial-gradient(circle, #00cec9, #0984e3);
-          top: 40%;
-          left: 40%;
-          animation-delay: 14s;
-        }
-
-        @keyframes float {
-          0%, 100% { transform: translate(0, 0) scale(1); }
-          33% { transform: translate(20px, -20px) scale(1.05); }
-          66% { transform: translate(-15px, 15px) scale(0.98); }
+          inset: 0;
+          background: linear-gradient(
+            160deg,
+            rgba(44, 22, 48, 0.78) 0%,
+            rgba(28, 14, 38, 0.52) 45%,
+            rgba(18, 10, 28, 0.68) 100%
+          );
+          backdrop-filter: blur(1.5px);
         }
 
         .hero-content {
@@ -423,23 +399,27 @@ export default function Instructors() {
         }
 
         .hero-badge {
-          margin-bottom: 24px;
+          margin-bottom: 28px;
         }
 
         .hero-badge span {
           display: inline-block;
-          padding: 8px 20px;
-          background: rgba(255,255,255,0.15);
-          backdrop-filter: blur(10px);
+          padding: 8px 22px;
+          background: rgba(255,255,255,0.11);
+          backdrop-filter: blur(12px);
           border-radius: 100px;
-          font-size: 0.85rem;
+          font-size: 0.82rem;
+          border: 1px solid rgba(255,255,255,0.2);
+          color: #f0dce8;
+          letter-spacing: 1.5px;
         }
 
         .hero-title {
           font-size: 3rem;
           font-weight: 800;
           margin-bottom: 20px;
-          line-height: 1.2;
+          line-height: 1.15;
+          text-shadow: 0 2px 40px rgba(0,0,0,0.3);
         }
 
         @media (min-width: 768px) {
@@ -449,17 +429,17 @@ export default function Instructors() {
         }
 
         .gradient-text {
-          background: linear-gradient(135deg, #ff6b9d, #a363d9, #00cec9);
+          background: linear-gradient(135deg, #e8b4cb, #d4a0d8, #c2a8e2);
           -webkit-background-clip: text;
           background-clip: text;
           color: transparent;
         }
 
         .hero-subtitle {
-          font-size: 1rem;
-          opacity: 0.9;
+          font-size: 1.05rem;
+          color: rgba(255,255,255,0.82);
           margin-bottom: 40px;
-          line-height: 1.6;
+          line-height: 1.7;
         }
 
         /* Filter Section */

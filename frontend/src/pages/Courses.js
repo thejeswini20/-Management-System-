@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FiArrowRight, FiClock, FiUser, FiUsers, FiStar, FiFilter, FiChevronDown, FiInfo } from 'react-icons/fi';
 import { courses } from '../data/data';
@@ -12,6 +12,10 @@ export default function Courses() {
   const [activeStyle, setActiveStyle] = useState('All');
   const [viewMode, setViewMode] = useState('grid');
   const [expandedCard, setExpandedCard] = useState(null);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const filtered = courses.filter(c => {
     const levelMatch = activeLevel === 'All' ||
@@ -45,8 +49,10 @@ export default function Courses() {
 
   return (
     <div className="courses-page page-fade-in">
-      {/* Hero Section - Enhanced with better visual impact */}
+      {/* Hero Section */}
       <section className="courses-hero">
+        <div className="hero-bg-image"></div>
+        <div className="hero-overlay"></div>
         <div className="hero-particles">
           {[...Array(30)].map((_, i) => (
             <div key={i} className="particle-dot" style={{
@@ -251,9 +257,13 @@ export default function Courses() {
                           <span className="original-price">₹{course.originalFee.toLocaleString()}</span>
                         )}
                       </div>
-                      <Link to="/login" className="enroll-btn">
-                        Enroll Now <FiArrowRight className="btn-icon" />
-                      </Link>
+                      <Link
+                          to="/enroll"
+                          state={{ courseId: course.id }}
+                          className="enroll-btn"
+                        >
+                          Enroll Now <FiArrowRight className="btn-icon" />
+                        </Link>
                     </div>
                   </div>
                 </div>
@@ -288,24 +298,46 @@ export default function Courses() {
         .courses-hero {
           position: relative;
           min-height: 85vh;
-          background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+          background: #1a1520;
           display: flex;
           align-items: center;
           justify-content: center;
           overflow: hidden;
         }
 
+        .hero-bg-image {
+          position: absolute;
+          inset: 0;
+          background-image: url('https://images.unsplash.com/photo-1535525153412-5a42439a210d?w=1600&q=80');
+          background-size: cover;
+          background-position: center 40%;
+          filter: brightness(0.55) saturate(0.85);
+        }
+
+        .hero-overlay {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(
+            135deg,
+            rgba(44, 22, 48, 0.72) 0%,
+            rgba(30, 15, 40, 0.5) 40%,
+            rgba(20, 10, 30, 0.6) 100%
+          );
+          backdrop-filter: blur(2px);
+        }
+
         .hero-particles {
           position: absolute;
           width: 100%;
           height: 100%;
+          z-index: 1;
         }
 
         .particle-dot {
           position: absolute;
           width: 3px;
           height: 3px;
-          background: rgba(255,255,255,0.4);
+          background: rgba(255,255,255,0.35);
           border-radius: 50%;
           left: var(--x);
           top: -10px;
@@ -314,20 +346,10 @@ export default function Courses() {
         }
 
         @keyframes float-particle {
-          0% {
-            top: -10px;
-            opacity: 0;
-          }
-          10% {
-            opacity: 1;
-          }
-          90% {
-            opacity: 1;
-          }
-          100% {
-            top: 100%;
-            opacity: 0;
-          }
+          0% { top: -10px; opacity: 0; }
+          10% { opacity: 1; }
+          90% { opacity: 1; }
+          100% { top: 100%; opacity: 0; }
         }
 
         .hero-content {
@@ -340,53 +362,52 @@ export default function Courses() {
         }
 
         .hero-badge {
-          margin-bottom: 24px;
+          margin-bottom: 28px;
         }
 
         .badge-pulse {
           display: inline-block;
-          padding: 8px 20px;
-          background: rgba(255,255,255,0.15);
-          backdrop-filter: blur(10px);
+          padding: 8px 22px;
+          background: rgba(255,255,255,0.12);
+          backdrop-filter: blur(12px);
           border-radius: 100px;
-          font-size: 0.85rem;
+          font-size: 0.83rem;
+          border: 1px solid rgba(255,255,255,0.18);
+          color: #f0dce8;
           animation: pulse 2s infinite;
         }
 
         @keyframes pulse {
-          0%, 100% {
-            opacity: 1;
-          }
-          50% {
-            opacity: 0.7;
-          }
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.7; }
         }
 
         .hero-title {
-          font-size: 3.5rem;
+          font-size: 3.2rem;
           font-weight: 800;
           margin-bottom: 20px;
-          line-height: 1.2;
+          line-height: 1.15;
+          text-shadow: 0 2px 40px rgba(0,0,0,0.3);
         }
 
         @media (min-width: 768px) {
           .hero-title {
-            font-size: 5rem;
+            font-size: 4.5rem;
           }
         }
 
         .gradient-text {
-          background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+          background: linear-gradient(135deg, #e8b4cb, #d4a0d8, #c2a8e2);
           -webkit-background-clip: text;
           background-clip: text;
           color: transparent;
         }
 
         .hero-subtitle {
-          font-size: 1.125rem;
-          opacity: 0.9;
+          font-size: 1.1rem;
+          color: rgba(255,255,255,0.85);
           margin-bottom: 40px;
-          line-height: 1.6;
+          line-height: 1.7;
         }
 
         .hero-stats {
@@ -404,15 +425,12 @@ export default function Courses() {
           display: block;
           font-size: 2rem;
           font-weight: 700;
-          background: linear-gradient(135deg, #f093fb, #f5576c);
-          -webkit-background-clip: text;
-          background-clip: text;
-          color: transparent;
+          color: #f0dce8;
         }
 
         .stat-label {
           font-size: 0.85rem;
-          opacity: 0.8;
+          color: rgba(255,255,255,0.7);
         }
 
         .hero-wave {

@@ -128,11 +128,11 @@ export default function Fees() {
   const [billingCycle, setBillingCycle] = useState('monthly');
   const [selectedItem, setSelectedItem] = useState(null); // plan, combo, or course object
   const [selectedType, setSelectedType] = useState(null); // 'plan', 'combo', or 'course'
-  
+
   const [selectedPayment, setSelectedPayment] = useState('card');
   const [scrolled, setScrolled] = useState(false);
   const [faqOpen, setFaqOpen] = useState(null);
-  
+
   const [showCheckout, setShowCheckout] = useState(false);
   const [checkoutStep, setCheckoutStep] = useState(1); // 1 = Details/Payment, 2 = Success
   const [isProcessing, setIsProcessing] = useState(false);
@@ -144,6 +144,10 @@ export default function Fees() {
   const [advisorForm, setAdvisorForm] = useState({ name: '', phone: '', style: 'Ballet' });
   const [advisorSubmitted, setAdvisorSubmitted] = useState(false);
   const [showAdvisorModal, setShowAdvisorModal] = useState(false);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 100);
@@ -158,7 +162,7 @@ export default function Fees() {
         name: `Free Trial Class with ${instName || "Expert Instructor"}`,
         price: 0
       }, 'trial');
-      
+
       // Clear navigation state to prevent re-opening modal on refresh
       window.history.replaceState({}, document.title);
     }
@@ -235,7 +239,7 @@ export default function Fees() {
 
   return (
     <div className="fees-page page-fade-in" style={{ background: '#090514', color: '#fff', minHeight: '100vh', fontFamily: "'Poppins', sans-serif" }}>
-      
+
       {/* Dynamic Glow Orbs */}
       <div className="glow-orb orb-1" />
       <div className="glow-orb orb-2" />
@@ -286,7 +290,7 @@ export default function Fees() {
             {plans.map((plan) => {
               const computed = calculateTotal(plan.price);
               const { months } = getMultiplierAndDiscount();
-              
+
               return (
                 <div
                   key={plan.name}
@@ -356,7 +360,7 @@ export default function Fees() {
                   <div className="combo-icon-pill">{combo.icon}</div>
                   <h3 className="combo-name">{combo.name}</h3>
                   <p className="combo-desc">{combo.description}</p>
-                  
+
                   <div className="combo-price">
                     <span className="combo-amount">₹{combo.price.toLocaleString()}</span>
                     <span className="combo-period">/month</span>
@@ -394,17 +398,17 @@ export default function Fees() {
                 <div key={course.id} className="course-price-card">
                   <div className="course-card-bg" style={{ backgroundImage: `url(${course.bgImage})` }} />
                   <div className="course-card-gradient" />
-                  
+
                   <div className="course-card-content">
                     <span className="course-duration-tag">⏱ {course.duration} • {course.schedule}</span>
                     <h3 className="course-title">{course.name}</h3>
-                    
+
                     <div className="course-price-bottom">
                       <div>
                         <span className="course-price-label">Price per month</span>
                         <div className="course-price-val">₹{course.fee.toLocaleString()}</div>
                       </div>
-                      
+
                       <button
                         onClick={() => handleOpenCheckout(course, 'course')}
                         className="course-enroll-btn"
@@ -460,7 +464,7 @@ export default function Fees() {
               <span className="cta-tag">ZERO RISK TRIAL</span>
               <h2>Start Your Dance Journey Today</h2>
               <p>Book a free 30-minute introductory trial session with one of our certified instructors.</p>
-              
+
               <div className="cta-actions">
                 <button
                   onClick={() => handleOpenCheckout({ name: "Free Trial Class", price: 0 }, 'trial')}
@@ -500,17 +504,17 @@ export default function Fees() {
                 <p className="modal-subtitle">Review your selection and complete secure payment</p>
 
                 <div className="checkout-layout">
-                  
+
                   {/* Left Column: Order Summary */}
                   <div className="checkout-summary-box">
                     <h3 className="summary-title">Order Summary</h3>
-                    
+
                     <div className="summary-details">
                       <div className="item-badge-row">
                         <span className="item-name">{selectedItem.name}</span>
                         <span className="item-type-tag">{selectedType.toUpperCase()}</span>
                       </div>
-                      
+
                       {selectedType === 'plan' && (
                         <div className="cycle-indicator-row">
                           <span>Billing Cycle:</span>
@@ -544,7 +548,7 @@ export default function Fees() {
                         <span>Subtotal</span>
                         <span>₹{calculatedValues.subtotal.toLocaleString()}</span>
                       </div>
-                      
+
                       <div className="invoice-row">
                         <span>GST (18%)</span>
                         <span>₹{calculatedValues.gst.toLocaleString()}</span>
@@ -567,7 +571,7 @@ export default function Fees() {
                   {/* Right Column: Payment Form */}
                   <div className="checkout-payment-box">
                     <h3 className="payment-title">Select Payment Method</h3>
-                    
+
                     <div className="payment-methods">
                       {paymentOptions.map(opt => (
                         <button
@@ -809,7 +813,7 @@ export default function Fees() {
                 <p style={{ color: '#bbb', fontSize: '0.88rem', marginBottom: 24, lineHeight: 1.5 }}>
                   Leave your details and a coordinator will guide you in choosing the best curriculum.
                 </p>
-                
+
                 <form onSubmit={(e) => { e.preventDefault(); setAdvisorSubmitted(true); }}>
                   <div className="form-group-light" style={{ marginBottom: 16 }}>
                     <label>Full Name</label>
