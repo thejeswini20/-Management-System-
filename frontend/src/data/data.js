@@ -27,13 +27,13 @@ export const courses = [
 ];
 
 export const timetable = [
-  { day: "Monday", slots: [{ time: "7:00 AM", course: "Ballet", instructor: "Ms. Kavya", batch: "Morning", room: "Studio A" }, { time: "6:00 PM", course: "Hip-Hop", instructor: "Mr. Arjun", batch: "Evening", room: "Studio B" }] },
-  { day: "Tuesday", slots: [{ time: "7:00 AM", course: "Kathak", instructor: "Ms. Sunita", batch: "Morning", room: "Studio A" }, { time: "6:30 PM", course: "Salsa", instructor: "Ms. Elena", batch: "Evening", room: "Studio C" }] },
-  { day: "Wednesday", slots: [{ time: "7:00 AM", course: "Contemporary", instructor: "Mr. Dev", batch: "Morning", room: "Studio B" }, { time: "6:00 PM", course: "Ballet", instructor: "Ms. Kavya", batch: "Evening", room: "Studio A" }] },
-  { day: "Thursday", slots: [{ time: "7:00 AM", course: "Bharatanatyam", instructor: "Ms. Sunita", batch: "Morning", room: "Studio A" }, { time: "6:30 PM", course: "Hip-Hop", instructor: "Mr. Arjun", batch: "Evening", room: "Studio B" }] },
-  { day: "Friday", slots: [{ time: "7:00 AM", course: "Salsa", instructor: "Ms. Elena", batch: "Morning", room: "Studio C" }, { time: "6:00 PM", course: "Kathak", instructor: "Ms. Sunita", batch: "Evening", room: "Studio A" }] },
-  { day: "Saturday", slots: [{ time: "9:00 AM", course: "Ballet", instructor: "Ms. Kavya", batch: "Weekend", room: "Studio A" }, { time: "11:00 AM", course: "Hip-Hop", instructor: "Mr. Arjun", batch: "Weekend", room: "Studio B" }, { time: "2:00 PM", course: "Contemporary", instructor: "Mr. Dev", batch: "Weekend", room: "Studio C" }] },
-  { day: "Sunday", slots: [{ time: "10:00 AM", course: "Bharatanatyam", instructor: "Ms. Sunita", batch: "Weekend", room: "Studio A" }, { time: "12:00 PM", course: "Kathak", instructor: "Ms. Sunita", batch: "Weekend", room: "Studio B" }] },
+  { day: "Monday", slots: [{ time: "7:00 AM", course: "Ballet", instructor: "Ms. Kavya", batch: "Morning", room: "Studio A", level: "Beginner" }, { time: "6:00 PM", course: "Hip-Hop", instructor: "Mr. Arjun", batch: "Evening", room: "Studio B", level: "Intermediate" }] },
+  { day: "Tuesday", slots: [{ time: "7:00 AM", course: "Kathak", instructor: "Ms. Sunita", batch: "Morning", room: "Studio A", level: "Beginner" }, { time: "6:30 PM", course: "Salsa", instructor: "Ms. Elena", batch: "Evening", room: "Studio C", level: "Advanced" }] },
+  { day: "Wednesday", slots: [{ time: "7:00 AM", course: "Contemporary", instructor: "Mr. Dev", batch: "Morning", room: "Studio B", level: "Intermediate" }, { time: "6:00 PM", course: "Ballet", instructor: "Ms. Kavya", batch: "Evening", room: "Studio A", level: "Advanced" }] },
+  { day: "Thursday", slots: [{ time: "7:00 AM", course: "Bharatanatyam", instructor: "Ms. Sunita", batch: "Morning", room: "Studio A", level: "Beginner" }, { time: "6:30 PM", course: "Hip-Hop", instructor: "Mr. Arjun", batch: "Evening", room: "Studio B", level: "Intermediate" }] },
+  { day: "Friday", slots: [{ time: "7:00 AM", course: "Salsa", instructor: "Ms. Elena", batch: "Morning", room: "Studio C", level: "Beginner" }, { time: "6:00 PM", course: "Kathak", instructor: "Ms. Sunita", batch: "Evening", room: "Studio A", level: "Advanced" }] },
+  { day: "Saturday", slots: [{ time: "9:00 AM", course: "Ballet", instructor: "Ms. Kavya", batch: "Weekend", room: "Studio A", level: "Beginner" }, { time: "11:00 AM", course: "Hip-Hop", instructor: "Mr. Arjun", batch: "Weekend", room: "Studio B", level: "Intermediate" }, { time: "2:00 PM", course: "Contemporary", instructor: "Mr. Dev", batch: "Weekend", room: "Studio C", level: "Advanced" }] },
+  { day: "Sunday", slots: [{ time: "10:00 AM", course: "Bharatanatyam", instructor: "Ms. Sunita", batch: "Weekend", room: "Studio A", level: "Beginner" }, { time: "12:00 PM", course: "Kathak", instructor: "Ms. Sunita", batch: "Weekend", room: "Studio B", level: "Intermediate" }] },
 ];
 
 export const payments = [

@@ -40,7 +40,7 @@ const SlotCard = ({ slot }) => {
             {slot.batch}
           </span>
           {slot.level && (
-            <span className="level-indicator">{slot.level}</span>
+            <span className={`level-indicator level-${slot.level.toLowerCase()}`}>{slot.level}</span>
           )}
         </div>
       </div>

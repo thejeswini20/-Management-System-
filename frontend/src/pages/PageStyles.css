@@ -206,8 +206,37 @@
 .level-indicator {
   font-size: 0.7rem;
   padding: 0.25rem 0.5rem;
-  background: #e5e7eb;
   border-radius: 6px;
+  font-weight: 600;
+  background: #e5e7eb;
+  color: #374151;
+}
+
+.level-indicator.level-beginner {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.level-indicator.level-intermediate {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.level-indicator.level-advanced {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.legend-color.beginner {
+  background: #10b981;
+}
+
+.legend-color.intermediate {
+  background: #f59e0b;
+}
+
+.legend-color.advanced {
+  background: #ef4444;
 }
 
 .empty-slots {

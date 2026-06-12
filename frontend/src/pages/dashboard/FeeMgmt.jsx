@@ -20,6 +20,36 @@ export default function FeeMgmt() {
            (filter==='All'||p.status===filter);
   });
 
+  const exportCSV = () => {
+    // Build CSV content from currently filtered rows
+    const headers = ['Invoice ID', 'Student', 'Course', 'Amount (INR)', 'Date', 'Payment Method', 'Status'];
+    const rows = filtered.map(p => [
+      p.id,
+      p.student,
+      p.course,
+      p.amount,
+      p.date,
+      p.method === '—' ? '' : p.method,
+      p.status,
+    ]);
+
+    const csvContent = [
+      headers.join(','),
+      ...rows.map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(','))
+    ].join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url  = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    const date = new Date().toISOString().split('T')[0];
+    link.href     = url;
+    link.download = `fee-report-${date}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
   const paidTotal    = payments.filter(p=>p.status==='Paid').reduce((a,p)=>a+p.amount,0);
   const pendingTotal = payments.filter(p=>p.status==='Pending').reduce((a,p)=>a+p.amount,0);
   const overdueTotal = payments.filter(p=>p.status==='Overdue').reduce((a,p)=>a+p.amount,0);
@@ -30,7 +60,7 @@ export default function FeeMgmt() {
     <div className="dash-page">
       <div className="dash-page-header">
         <div><h1>Fee Management</h1><p>Track payments, dues, and monthly revenue</p></div>
-        <button className="btn btn-outline" style={{padding:'9px 16px',fontSize:'0.82rem'}}><FiDownload /> Export CSV</button>
+        <button className="btn btn-outline" style={{padding:'9px 16px',fontSize:'0.82rem'}} onClick={exportCSV} title={`Export ${filtered.length} row(s) to CSV`}><FiDownload /> Export CSV{filtered.length < payments.length ? ` (${filtered.length})` : ''}</button>
       </div>
 
       {/* Revenue summary */}

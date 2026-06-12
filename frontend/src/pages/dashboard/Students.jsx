@@ -11,7 +11,7 @@ export default function Students() {
   const [search, setSearch] = useState('');
   const [view, setView] = useState('table');
   const [showModal, setShowModal] = useState(false);
-  const [form, setForm] = useState({ name:'', email:'', course:'', age:'', batch:'', fee:'', status:'Active', phone:'' });
+  const [form, setForm] = useState({ name:'', email:'', course:'', age:'', batch:'', fee:'', status:'Active' });
   const [editId, setEditId] = useState(null);
   const [filterStatus, setFilterStatus] = useState('All');
 
@@ -31,6 +31,9 @@ export default function Students() {
   const normalizeStudentFromApi = (s) => {
     // Backend student schema likely uses MongoDB _id; UI expects id.
     const id = s.id || s._id;
+    // Normalize status: backend stores 'active'/'inactive' (lowercase), UI uses 'Active'/'Inactive'
+    const rawStatus = s.status ?? 'active';
+    const status = rawStatus.charAt(0).toUpperCase() + rawStatus.slice(1).toLowerCase();
     return {
       id,
       name: s.name ?? '',
@@ -39,8 +42,8 @@ export default function Students() {
       age: s.age ?? '',
       batch: s.batch ?? '',
       fee: s.fee ?? s.amount ?? '',
-      status: s.status ?? 'Active',
-      joined: s.joinDate || s.joined || s.joinDate || '',
+      status,
+      joined: s.joinDate || s.joined || '',
       avatar: s.avatar || courseColors[s.course] || '#7c3aed'
     };
   };
@@ -77,8 +80,8 @@ export default function Students() {
         name: form.name,
         email: form.email,
         course: form.course,
-        joinDate: form.joined || undefined,
-        status: form.status
+        joinDate: form.joined || new Date().toISOString().split('T')[0],
+        status: form.status.toLowerCase()
       };
 
       if (editId) {
@@ -144,7 +147,7 @@ export default function Students() {
         </div>
         <div className="dash-page-actions">
           <button className="btn btn-outline" style={{padding:'9px 16px',fontSize:'0.82rem'}}><FiDownload /> Export</button>
-          <button className="btn btn-primary" style={{padding:'9px 18px',fontSize:'0.82rem'}} onClick={() => { setEditId(null); setForm({ name:'', age:'', course:'', batch:'', fee:'', status:'Active' }); setShowModal(true); }}>
+          <button className="btn btn-primary" style={{padding:'9px 18px',fontSize:'0.82rem'}} onClick={() => { setEditId(null); setForm({ name:'', email:'', age:'', course:'', batch:'', fee:'', status:'Active' }); setShowModal(true); }}>
             <FiPlus /> Add Student
           </button>
         </div>
@@ -272,7 +275,7 @@ export default function Students() {
               <button className="modal-close" onClick={() => setShowModal(false)}>✕</button>
             </div>
             <div className="modal-grid">
-              {[{name:'name',label:'Full Name',type:'text'},{name:'age',label:'Age',type:'number'},{name:'fee',label:'Monthly Fee (₹)',type:'number'}].map(f => (
+              {[{name:'name',label:'Full Name',type:'text'},{name:'email',label:'Email Address',type:'email'},{name:'age',label:'Age',type:'number'},{name:'fee',label:'Monthly Fee (₹)',type:'number'}].map(f => (
                 <div key={f.name} className="form-group">
                   <input type={f.type} placeholder=" " value={form[f.name]||''} onChange={e => setForm({...form,[f.name]:e.target.value})} />
                   <label>{f.label}</label>
